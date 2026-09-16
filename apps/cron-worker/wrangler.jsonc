@@ -23,12 +23,14 @@
       "id": "0c314347008243f8a51afffc3aa3e404"
     }
   ],
-  // UTC expressions — Santa Cruz de la Sierra is UTC-4 (no DST). Convert the
-  // intended *local* send time to UTC before relying on these in production.
+  // UTC expressions — Santa Cruz de la Sierra is UTC-4 (no DST).
+  // 10:00 AM local = 14:00 UTC. 5:00 PM local = 21:00 UTC.
   "triggers": {
     "crons": [
       "0 13 * * 2", // "The Tuesday Email" weekly digest — Tue 09:00 local
-      "0 13 * * 5" // BoliPass Weekend Roundup — Fri 09:00 local
+      "0 13 * * 5", // BoliPass Weekend Roundup — Fri 09:00 local
+      "0 14 * * *", // USD/BOB exchange rate update — Daily 10:00 AM local (14:00 UTC)
+      "0 21 * * *"  // USD/BOB exchange rate update — Daily 5:00 PM local (21:00 UTC)
     ]
   }
 }

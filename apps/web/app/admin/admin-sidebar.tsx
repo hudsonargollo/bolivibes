@@ -86,60 +86,61 @@ export default function AdminSidebar() {
   return (
     <aside
       className="a-sidebar transition-all duration-300 relative flex flex-col border-r border-stone-800 bg-[#16120f]"
-      style={{ width: collapsed ? 72 : 260 }}
+      style={{ width: collapsed ? 76 : 260 }}
     >
-      {/* Top Header with Logo and Collapse Toggle */}
-      <div className="flex items-center justify-between p-4 border-b border-stone-800/80">
-        <Link href="/admin" className="a-wordmark flex items-center gap-3 overflow-hidden" aria-label="BoliVibes admin home">
-          {collapsed ? (
-            <div className="flex flex-col items-center gap-1 w-full">
+      {/* Top Header with Logo, ADMIN badge below, and Collapse Toggle */}
+      <div className="flex flex-col p-4 border-b border-stone-800/80 gap-3">
+        <div className="flex items-center justify-between w-full">
+          <Link href="/admin" className="a-wordmark flex items-center overflow-hidden" aria-label="BoliVibes admin home">
+            {collapsed ? (
               <img
                 src="/api/assets/brand/logo-icon.webp"
                 alt="BoliVibes"
-                width={32}
-                height={32}
-                className="rounded-lg object-contain flex-shrink-0"
+                width={36}
+                height={36}
+                className="rounded-xl object-contain mx-auto"
                 onError={(e) => { (e.target as HTMLImageElement).src = "/imgs/logo-icon.webp"; }}
               />
-              <span className="text-[9px] text-amber-400 font-extrabold tracking-widest uppercase">ADMIN</span>
-            </div>
-          ) : (
-            <div className="flex flex-col items-start gap-1 w-full">
+            ) : (
               <img
                 src="/api/assets/brand/logo-clay.webp"
                 alt="BoliVibes"
-                width={120}
-                height={36}
-                className="object-contain flex-shrink-0"
+                width={130}
+                height={40}
+                className="object-contain"
                 onError={(e) => { (e.target as HTMLImageElement).src = "/imgs/logo-clay.webp"; }}
               />
-              <span className="text-[9px] text-amber-400 font-extrabold uppercase tracking-widest px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30">
-                ADMIN
-              </span>
-            </div>
-          )}
-        </Link>
+            )}
+          </Link>
 
-        {/* Retract / Expand Toggle Button up on top */}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="p-1.5 rounded-lg bg-stone-900 hover:bg-stone-800 text-stone-400 hover:text-stone-200 border border-stone-800 transition-all cursor-pointer flex-shrink-0"
-          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          <svg
-            className={`w-4 h-4 transition-transform duration-300 ${collapsed ? "rotate-180" : ""}`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth="2"
+          {/* Retract / Expand Toggle Button */}
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="p-1.5 rounded-lg bg-stone-900 hover:bg-stone-800 text-stone-400 hover:text-stone-200 border border-stone-800 transition-all cursor-pointer flex-shrink-0"
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-          </svg>
-        </button>
+            <svg
+              className={`w-4 h-4 transition-transform duration-300 ${collapsed ? "rotate-180" : ""}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+            </svg>
+          </button>
+        </div>
+
+        {/* ADMIN badge below logo and bigger */}
+        <div className={`${collapsed ? "text-center" : "text-left"}`}>
+          <span className="text-[11px] text-amber-400 font-extrabold uppercase tracking-[0.2em] px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/30 inline-block shadow-sm">
+            ADMIN
+          </span>
+        </div>
       </div>
 
       {/* Navigation Links */}
-      <nav className="a-nav p-2 space-y-1.5 overflow-y-auto flex-1">
+      <nav className="a-nav p-2.5 space-y-1.5 overflow-y-auto flex-1">
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href));
           return (
@@ -148,6 +149,8 @@ export default function AdminSidebar() {
               href={item.href}
               title={collapsed ? item.label : undefined}
               className={`flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all ${
+                collapsed ? "justify-center px-0" : ""
+              } ${
                 active
                   ? "bg-amber-500 text-stone-950 shadow-md shadow-amber-500/20 font-extrabold"
                   : item.highlight

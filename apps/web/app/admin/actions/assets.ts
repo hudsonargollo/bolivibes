@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { cf } from "@/lib/cloudflare";
-import { requireAdminAction, formOptionalString, formString } from "./require-admin";
+import { requireAdminAction, formString } from "./require-admin";
 
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 const ALLOWED_FOLDERS = new Set(["brand", "events", "payment", "documents", "misc"]);
@@ -43,42 +43,48 @@ function normalizeAssetKey(key: string) {
   return normalized;
 }
 
-/** Cloudflare R2 customMetadata requires US-ASCII strings only. */
 function asciiOnly(str: string) {
   return str.replace(/[^\x20-\x7E]/g, "").slice(0, 120);
 }
 
-export async function uploadAdminAsset(formData: FormData) {
+export async function uploadAdminAssets(formData: FormData) {
   const session = await requireAdminAction();
   const folder = formString(formData, "folder") || "misc";
   if (!ALLOWED_FOLDERS.has(folder)) throw new Error("Invalid asset folder");
 
-  const value = formData.get("asset");
-  if (!(value instanceof File) || value.size === 0) throw new Error("Choose a file to upload");
-  if (value.size > MAX_UPLOAD_BYTES) throw new Error("File is larger than 10 MB");
+  const files = formData.getAll("assets").filter((v): v is File => v instanceof File && v.size > 0);
+  if (files.length === 0) {
+    const single = formData.get("asset");
+    if (single instanceof File && single.size > 0) files.push(single);
+  }
+  if (files.length === 0) throw new Error("Choose at least one file to upload");
 
-  const requestedName = formOptionalString(formData, "filename");
-  const originalName = value.name || "asset";
-  const filename = slugFileName(requestedName || originalName);
-  const contentType = contentTypeFor(value, filename);
-  if (!ALLOWED_TYPES.has(contentType)) throw new Error("Unsupported file type");
-
-  const shouldReplace = formData.get("replace") === "on";
-  const key = shouldReplace ? `${folder}/${filename}` : `${folder}/${crypto.randomUUID()}-${filename}`;
   const { env } = cf();
-  const bytes = await value.arrayBuffer();
+  const uploadedUrls: string[] = [];
 
-  await env.EVENT_ASSETS.put(key, bytes, {
-    httpMetadata: { contentType },
-    customMetadata: {
-      originalName: asciiOnly(originalName),
-      uploadedBy: asciiOnly(session.email ?? session.userId),
-      uploadedAt: new Date().toISOString(),
-    },
-  });
+  for (const file of files) {
+    if (file.size > MAX_UPLOAD_BYTES) continue;
+    const originalName = file.name || "asset";
+    const filename = slugFileName(originalName);
+    const contentType = contentTypeFor(file, filename);
+    if (!ALLOWED_TYPES.has(contentType)) continue;
+
+    const key = `${folder}/${crypto.randomUUID()}-${filename}`;
+    const bytes = await file.arrayBuffer();
+
+    await env.EVENT_ASSETS.put(key, bytes, {
+      httpMetadata: { contentType },
+      customMetadata: {
+        originalName: asciiOnly(originalName),
+        uploadedBy: asciiOnly(session.email ?? session.userId),
+        uploadedAt: new Date().toISOString(),
+      },
+    });
+    uploadedUrls.push(`/api/assets/${key}`);
+  }
 
   revalidatePath("/admin/assets");
-  redirect(`/admin/assets?uploaded=${encodeURIComponent(`/api/assets/${key}`)}`);
+  return { success: true, count: uploadedUrls.length, urls: uploadedUrls };
 }
 
 export async function deleteAdminAsset(formData: FormData) {

@@ -1,5 +1,6 @@
 import { createDb, products } from "@bolivibes/db";
 import { cf } from "@/lib/cloudflare";
+import { formatDualPrice } from "@/lib/currency";
 
 const TYPE_LABELS: Record<string, string> = {
   tour: "Tour",
@@ -15,9 +16,8 @@ export default async function AdminProductsPage() {
   return (
     <div>
       <div className="a-actions-row">
-        <h1 className="a-h1" style={{ margin: 0 }}>
-          Marketplace products
-        </h1>
+        <h1 className="a-h1" style={{ margin: 0, display: "none" }}>Marketplace products</h1>
+        <span className="a-muted">Manage tours, tickets, and audio guides with automatic USD/BOB conversion (Rate: 1 USD = 6.96 BOB).</span>
         <a href="/admin/products/new" className="clay-btn">
           New product
         </a>
@@ -29,7 +29,7 @@ export default async function AdminProductsPage() {
             <tr>
               <th>Title</th>
               <th>Type</th>
-              <th>Price (BOB)</th>
+              <th>Price (USD / BOB)</th>
               <th>Host</th>
               <th>Active</th>
               <th></th>
@@ -40,7 +40,7 @@ export default async function AdminProductsPage() {
               <tr key={product.id}>
                 <td>{product.title}</td>
                 <td>{TYPE_LABELS[product.type] ?? product.type}</td>
-                <td>{product.priceBob} BOB</td>
+                <td>{formatDualPrice(product.priceBob / 6.96)}</td>
                 <td>{product.hostId ?? "—"}</td>
                 <td>
                   {product.active ? (

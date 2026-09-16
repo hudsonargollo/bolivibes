@@ -1,6 +1,7 @@
 import { createDb, users } from "@bolivibes/db";
 import { cf } from "@/lib/cloudflare";
-import { createAdminUser, updateUserRole, setUserVip, deleteUser } from "../actions/users";
+import { createAdminUser, updateUserRole, setUserVip } from "../actions/users";
+import DeleteUserButton from "./delete-user-button";
 
 export default async function AdminUsersPage() {
   const { env } = cf();
@@ -113,19 +114,7 @@ export default async function AdminUsersPage() {
                 <td>{user.createdAt?.slice(0, 10) ?? "—"}</td>
                 <td>
                   {user.role !== "admin" ? (
-                    <form
-                      action={deleteUser}
-                      onSubmit={(e) => {
-                        if (!confirm(`Are you sure you want to delete user ${user.email}?`)) {
-                          e.preventDefault();
-                        }
-                      }}
-                    >
-                      <input type="hidden" name="userId" value={user.id} />
-                      <button type="submit" className="clay-btn clay-btn-sm" style={{ background: "#c83727", color: "#fff" }}>
-                        Delete
-                      </button>
-                    </form>
+                    <DeleteUserButton userId={user.id} userEmail={user.email} />
                   ) : (
                     <span className="a-muted">—</span>
                   )}

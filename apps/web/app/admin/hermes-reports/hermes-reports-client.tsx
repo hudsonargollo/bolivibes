@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-interface ReportItem {
-  title: string;
-  filename: string;
-  relativePath: string;
-  content: string;
-  sizeBytes: number;
-}
+import type { ReportItem } from "./reports-data";
 
 export default function HermesReportsClient({
   reports,
@@ -40,7 +33,7 @@ export default function HermesReportsClient({
             <h1 className="a-h1" style={{ margin: 0 }}>Hermes Reports &amp; Specs</h1>
             {isHudson ? (
               <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-extrabold uppercase tracking-wider">
-                👑 Superadmin · Hudson Argollo
+                Superadmin · Hudson Argollo
               </span>
             ) : (
               <span className="px-3 py-1 rounded-full bg-stone-800 text-stone-300 text-xs font-semibold">
@@ -68,7 +61,7 @@ export default function HermesReportsClient({
                   </span>
                   <h2 className="text-xl font-bold text-stone-100 mt-0.5">{rep.title}</h2>
                   <p className="text-xs text-stone-400 mt-1">
-                    Size: {(rep.sizeBytes / 1024).toFixed(1)} KB · {rep.content.split("\n").length} lines
+                    Category: {rep.category} · {rep.content.split("\n").length} lines
                   </p>
                 </div>
 
@@ -86,7 +79,7 @@ export default function HermesReportsClient({
                     className="clay-btn"
                     style={{ fontSize: 13, padding: "8px 16px", background: isCopied ? "#1e9e45" : undefined }}
                   >
-                    {isCopied ? "✓ Copied to Clipboard!" : "Copy Report Markdown"}
+                    {isCopied ? "Copied to Clipboard!" : "Copy Report Markdown"}
                   </button>
                 </div>
               </div>

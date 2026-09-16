@@ -1,6 +1,7 @@
 import { createDb, venues, vouchers } from "@bolivibes/db";
 import { cf } from "@/lib/cloudflare";
 import { setVoucherActive } from "../actions/vouchers";
+import { AdminHubNav, COMMERCE_TABS } from "../components/hub-nav";
 
 export default async function AdminVouchersPage() {
   const { env } = cf();
@@ -10,6 +11,7 @@ export default async function AdminVouchersPage() {
 
   return (
     <div>
+      <AdminHubNav tabs={COMMERCE_TABS} />
       <div className="a-actions-row">
         <h1 className="a-h1" style={{ margin: 0 }}>
           Vouchers
@@ -38,20 +40,16 @@ export default async function AdminVouchersPage() {
                 <td>{voucher.discountType}</td>
                 <td>
                   <form action={setVoucherActive} className="a-checkbox-row">
-                    <input type="hidden" name="id" value={voucher.id} />
-                    <input type="hidden" name="isActive" value={(!voucher.isActive).toString()} />
-                    <span className={voucher.isActive ? "a-text-sage" : "a-text-orange"}>
-                      {voucher.isActive ? "Active" : "Inactive"}
-                    </span>
-                    <button type="submit" className="a-btn-sm">
-                      {voucher.isActive ? "Deactivate" : "Activate"}
-                    </button>
+                    <input type="hidden" name="voucherId" value={voucher.id} />
+                    <label className="a-checkbox-row">
+                      <input type="checkbox" name="active" defaultChecked={Boolean(voucher.isActive)} />
+                      Active
+                    </label>
+                    <button type="submit" className="clay-btn clay-btn-sm">Save</button>
                   </form>
                 </td>
                 <td>
-                  <a href={`/admin/vouchers/${voucher.id}`} className="a-link">
-                    Edit
-                  </a>
+                  <a href={`/admin/vouchers/${voucher.id}`} className="a-link">Edit</a>
                 </td>
               </tr>
             ))}

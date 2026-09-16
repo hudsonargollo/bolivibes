@@ -2,6 +2,7 @@ import { createDb, users } from "@bolivibes/db";
 import { cf } from "@/lib/cloudflare";
 import { createAdminUser, updateUserRole, setUserVip } from "../actions/users";
 import DeleteUserButton from "./delete-user-button";
+import { AdminHubNav, COMMUNITY_TABS } from "../components/hub-nav";
 
 export default async function AdminUsersPage() {
   const { env } = cf();
@@ -10,6 +11,7 @@ export default async function AdminUsersPage() {
 
   return (
     <div>
+      <AdminHubNav tabs={COMMUNITY_TABS} />
       <h1 className="a-h1">Users</h1>
 
       <form action={createAdminUser} className="a-form a-card" style={{ maxWidth: 760, marginBottom: 24 }}>

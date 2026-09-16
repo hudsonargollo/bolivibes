@@ -1,5 +1,6 @@
 import { createDb, paymentMethods } from "@bolivibes/db";
 import { cf } from "@/lib/cloudflare";
+import { AdminHubNav, COMMERCE_TABS } from "../components/hub-nav";
 
 const METHOD_LABELS: Record<string, string> = {
   qr_bolivia: "QR Bolivia",
@@ -14,6 +15,7 @@ export default async function AdminPaymentMethodsPage() {
 
   return (
     <div>
+      <AdminHubNav tabs={COMMERCE_TABS} />
       <div className="a-actions-row">
         <h1 className="a-h1" style={{ margin: 0 }}>
           Payment methods
@@ -23,41 +25,34 @@ export default async function AdminPaymentMethodsPage() {
         </a>
       </div>
       <p className="a-muted" style={{ marginTop: -12, marginBottom: 20 }}>
-        Receiving details for the manually-confirmed rails (QR Bolivia, QR PIX, crypto). Stripe card payments are
-        automatic and don't need an entry here — set <code>STRIPE_SECRET_KEY</code> /{" "}
-        <code>STRIPE_WEBHOOK_SECRET</code> as Worker secrets instead.
+        Manual receiving details shown at BoliPass checkout when users pick QR Bolivia, PIX, or Crypto.
       </p>
 
       <div className="a-table-wrap">
         <table className="a-table">
           <thead>
             <tr>
-              <th>Label</th>
               <th>Method</th>
-              <th>Status</th>
+              <th>Label</th>
+              <th>Address / Key</th>
+              <th>Active</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {rows.map((pm) => (
-              <tr key={pm.id}>
-                <td>{pm.label}</td>
-                <td>{METHOD_LABELS[pm.method] ?? pm.method}</td>
-                <td>{pm.active ? <span className="a-text-sage">Active</span> : <span className="a-muted">Inactive</span>}</td>
+            {rows.map((m) => (
+              <tr key={m.id}>
+                <td><code>{METHOD_LABELS[m.method] ?? m.method}</code></td>
+                <td>{m.label}</td>
+                <td><small>{m.addressOrKey ?? "—"}</small></td>
                 <td>
-                  <a href={`/admin/payment-methods/${pm.id}`} className="a-link">
-                    Edit
-                  </a>
+                  {m.active ? <span className="a-text-sage">Active</span> : <span className="a-muted">Disabled</span>}
+                </td>
+                <td>
+                  <a href={`/admin/payment-methods/${m.id}`} className="a-link">Edit</a>
                 </td>
               </tr>
             ))}
-            {rows.length === 0 && (
-              <tr>
-                <td colSpan={4} className="a-muted" style={{ textAlign: "center", padding: 32 }}>
-                  No payment methods configured yet — buyers can't check out with QR/crypto until one exists.
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>

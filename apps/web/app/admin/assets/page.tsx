@@ -1,5 +1,6 @@
 import { cf } from "@/lib/cloudflare";
 import { deleteAdminAsset, uploadAdminAsset } from "../actions/assets";
+import { AdminHubNav, CATALOG_TABS } from "../components/hub-nav";
 
 const FOLDER_OPTIONS = [
   { value: "brand", label: "Brand" },
@@ -29,6 +30,7 @@ export default async function AdminAssetsPage({ searchParams }: { searchParams?:
 
   return (
     <div>
+      <AdminHubNav tabs={CATALOG_TABS} />
       <div className="a-actions-row">
         <div>
           <h1 className="a-h1" style={{ marginBottom: 6 }}>Assets</h1>
@@ -99,45 +101,39 @@ export default async function AdminAssetsPage({ searchParams }: { searchParams?:
         <table className="a-table">
           <thead>
             <tr>
-              <th>Preview</th>
               <th>Key</th>
-              <th>URL</th>
               <th>Size</th>
               <th>Uploaded</th>
-              <th>Actions</th>
+              <th>Type</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            {assets.length === 0 && (
-              <tr><td colSpan={6} className="a-muted">No uploaded assets yet.</td></tr>
-            )}
-            {assets.map((asset) => {
-              const url = `/api/assets/${asset.key}`;
-              const isImage = /\.(webp|png|jpe?g|svg)$/i.test(asset.key);
-              return (
-                <tr key={asset.key}>
-                  <td>
-                    {isImage ? <img src={url} alt="" style={{ width: 74, height: 48, objectFit: "contain", background: "#fff", borderRadius: 10 }} /> : <span className="a-muted">File</span>}
-                  </td>
-                  <td style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", fontSize: 12 }}>{asset.key}</td>
-                  <td><input className="a-input" readOnly value={url} style={{ minWidth: 260 }} /></td>
-                  <td>{formatBytes(asset.size)}</td>
-                  <td>{new Date(asset.uploaded).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}</td>
-                  <td>
-                    <form action={deleteAdminAsset}>
-                      <input type="hidden" name="key" value={asset.key} />
-                      <button
-                        type="submit"
-                        className="a-logout-btn"
-                        style={{ color: "var(--a-danger)", borderColor: "rgba(184, 73, 46, 0.3)" }}
-                      >
-                        Delete
-                      </button>
-                    </form>
-                  </td>
-                </tr>
-              );
-            })}
+            {assets.map((obj) => (
+              <tr key={obj.key}>
+                <td>
+                  <a href={`/api/assets/${obj.key}`} target="_blank" rel="noreferrer" className="a-link" style={{ fontWeight: 700 }}>
+                    {obj.key}
+                  </a>
+                  {obj.customMetadata?.originalName && (
+                    <span className="a-muted" style={{ display: "block", fontSize: 11 }}>
+                      {obj.customMetadata.originalName}
+                    </span>
+                  )}
+                </td>
+                <td>{formatBytes(obj.size)}</td>
+                <td>{new Date(obj.uploaded).toLocaleString()}</td>
+                <td>{obj.httpMetadata?.contentType ?? "—"}</td>
+                <td>
+                  <form action={deleteAdminAsset} style={{ display: "inline" }}>
+                    <input type="hidden" name="key" value={obj.key} />
+                    <button type="submit" className="clay-btn clay-btn-sm" style={{ background: "#c83727", color: "#fff" }}>
+                      Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

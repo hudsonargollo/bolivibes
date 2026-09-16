@@ -1,5 +1,6 @@
 import { createDb, venues } from "@bolivibes/db";
 import { cf } from "@/lib/cloudflare";
+import { AdminHubNav, CATALOG_TABS } from "../components/hub-nav";
 
 export default async function AdminVenuesPage() {
   const { env } = cf();
@@ -8,6 +9,7 @@ export default async function AdminVenuesPage() {
 
   return (
     <div>
+      <AdminHubNav tabs={CATALOG_TABS} />
       <div className="a-actions-row">
         <h1 className="a-h1" style={{ margin: 0 }}>
           Venues

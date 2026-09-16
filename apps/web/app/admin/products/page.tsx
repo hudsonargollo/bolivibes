@@ -1,5 +1,6 @@
 import { createDb, products } from "@bolivibes/db";
 import { cf } from "@/lib/cloudflare";
+import { AdminHubNav, COMMERCE_TABS } from "../components/hub-nav";
 
 const TYPE_LABELS: Record<string, string> = {
   tour: "Tour",
@@ -14,6 +15,7 @@ export default async function AdminProductsPage() {
 
   return (
     <div>
+      <AdminHubNav tabs={COMMERCE_TABS} />
       <div className="a-actions-row">
         <h1 className="a-h1" style={{ margin: 0 }}>
           Marketplace products
@@ -30,8 +32,8 @@ export default async function AdminProductsPage() {
               <th>Title</th>
               <th>Type</th>
               <th>Price (BOB)</th>
-              <th>Price (USD)</th>
-              <th>Status</th>
+              <th>Host</th>
+              <th>Active</th>
               <th></th>
             </tr>
           </thead>
@@ -40,9 +42,15 @@ export default async function AdminProductsPage() {
               <tr key={product.id}>
                 <td>{product.title}</td>
                 <td>{TYPE_LABELS[product.type] ?? product.type}</td>
-                <td>{product.priceBob.toFixed(2)}</td>
-                <td>{product.priceUsd != null ? `$${product.priceUsd.toFixed(2)}` : "—"}</td>
-                <td>{product.active ? <span className="a-text-sage">Active</span> : <span className="a-muted">Inactive</span>}</td>
+                <td>{product.priceBob} BOB</td>
+                <td>{product.hostId ?? "—"}</td>
+                <td>
+                  {product.active ? (
+                    <span className="a-text-sage">Active</span>
+                  ) : (
+                    <span className="a-muted">Draft</span>
+                  )}
+                </td>
                 <td>
                   <a href={`/admin/products/${product.id}`} className="a-link">
                     Edit
@@ -50,13 +58,6 @@ export default async function AdminProductsPage() {
                 </td>
               </tr>
             ))}
-            {rows.length === 0 && (
-              <tr>
-                <td colSpan={6} className="a-muted" style={{ textAlign: "center", padding: 32 }}>
-                  No products yet.
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>

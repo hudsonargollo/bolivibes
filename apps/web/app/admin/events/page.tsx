@@ -1,6 +1,5 @@
 import { createDb, events } from "@bolivibes/db";
 import { cf } from "@/lib/cloudflare";
-import { AdminHubNav, CATALOG_TABS } from "../components/hub-nav";
 
 export default async function AdminEventsPage() {
   const { env } = cf();
@@ -9,7 +8,6 @@ export default async function AdminEventsPage() {
 
   return (
     <div>
-      <AdminHubNav tabs={CATALOG_TABS} />
       <div className="a-actions-row">
         <h1 className="a-h1" style={{ margin: 0 }}>
           Events

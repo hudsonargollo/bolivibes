@@ -3,7 +3,6 @@ import { eq } from "@bolivibes/db";
 import { cf } from "@/lib/cloudflare";
 import { verifyPlace } from "../actions/places";
 import { PLACE_LAYERS, layerLabel } from "./layer-labels";
-import { AdminHubNav, CATALOG_TABS } from "../components/hub-nav";
 
 function filterHref(layer?: string, status?: string): string {
   const params = new URLSearchParams();
@@ -32,7 +31,6 @@ export default async function AdminPlacesPage({
 
   return (
     <div>
-      <AdminHubNav tabs={CATALOG_TABS} />
       <div className="a-actions-row">
         <h1 className="a-h1" style={{ margin: 0 }}>
           Places

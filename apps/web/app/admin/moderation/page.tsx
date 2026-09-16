@@ -2,7 +2,6 @@ import { createDb, userReports, users } from "@bolivibes/db";
 import { eq, desc } from "@bolivibes/db";
 import { cf } from "@/lib/cloudflare";
 import { dismissReport, banReportedUser } from "../actions/moderation";
-import { AdminHubNav, COMMUNITY_TABS } from "../components/hub-nav";
 
 export default async function AdminModerationPage() {
   const { env } = cf();
@@ -15,7 +14,6 @@ export default async function AdminModerationPage() {
 
   return (
     <div>
-      <AdminHubNav tabs={COMMUNITY_TABS} />
       <h1 className="a-h1">Moderation</h1>
       <p className="a-muted" style={{ marginTop: -12, marginBottom: 20 }}>
         Open reports from VIP Connect. Dismiss if there's nothing to act on, or ban — a banned user's session stops

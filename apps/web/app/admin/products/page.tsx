@@ -1,6 +1,5 @@
 import { createDb, products } from "@bolivibes/db";
 import { cf } from "@/lib/cloudflare";
-import { AdminHubNav, COMMERCE_TABS } from "../components/hub-nav";
 
 const TYPE_LABELS: Record<string, string> = {
   tour: "Tour",
@@ -15,7 +14,6 @@ export default async function AdminProductsPage() {
 
   return (
     <div>
-      <AdminHubNav tabs={COMMERCE_TABS} />
       <div className="a-actions-row">
         <h1 className="a-h1" style={{ margin: 0 }}>
           Marketplace products

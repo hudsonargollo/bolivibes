@@ -2,7 +2,6 @@ import { createDb, orders, products, users } from "@bolivibes/db";
 import { desc } from "@bolivibes/db";
 import { cf } from "@/lib/cloudflare";
 import { confirmOrder, cancelOrder } from "../actions/orders";
-import { AdminHubNav, COMMERCE_TABS } from "../components/hub-nav";
 
 const METHOD_LABELS: Record<string, string> = {
   stripe: "Stripe (card)",
@@ -24,7 +23,6 @@ export default async function AdminOrdersPage() {
 
   return (
     <div>
-      <AdminHubNav tabs={COMMERCE_TABS} />
       <div className="a-actions-row">
         <h1 className="a-h1" style={{ margin: 0 }}>
           Orders

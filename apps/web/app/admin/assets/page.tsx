@@ -1,6 +1,5 @@
 import { cf } from "@/lib/cloudflare";
 import { deleteAdminAsset, uploadAdminAsset } from "../actions/assets";
-import { AdminHubNav, CATALOG_TABS } from "../components/hub-nav";
 
 const FOLDER_OPTIONS = [
   { value: "brand", label: "Brand" },
@@ -30,7 +29,6 @@ export default async function AdminAssetsPage({ searchParams }: { searchParams?:
 
   return (
     <div>
-      <AdminHubNav tabs={CATALOG_TABS} />
       <div className="a-actions-row">
         <div>
           <h1 className="a-h1" style={{ marginBottom: 6 }}>Assets</h1>

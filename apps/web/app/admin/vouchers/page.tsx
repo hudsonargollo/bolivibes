@@ -1,7 +1,6 @@
 import { createDb, venues, vouchers } from "@bolivibes/db";
 import { cf } from "@/lib/cloudflare";
 import { setVoucherActive } from "../actions/vouchers";
-import { AdminHubNav, COMMERCE_TABS } from "../components/hub-nav";
 
 export default async function AdminVouchersPage() {
   const { env } = cf();
@@ -11,7 +10,6 @@ export default async function AdminVouchersPage() {
 
   return (
     <div>
-      <AdminHubNav tabs={COMMERCE_TABS} />
       <div className="a-actions-row">
         <h1 className="a-h1" style={{ margin: 0 }}>
           Vouchers

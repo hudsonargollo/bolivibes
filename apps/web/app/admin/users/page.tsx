@@ -1,6 +1,6 @@
 import { createDb, users } from "@bolivibes/db";
 import { cf } from "@/lib/cloudflare";
-import { createAdminUser, updateUserRole, setUserVip } from "../actions/users";
+import { createAdminUser, updateUserRole, setUserVip, deleteUser } from "../actions/users";
 
 export default async function AdminUsersPage() {
   const { env } = cf();
@@ -64,6 +64,7 @@ export default async function AdminUsersPage() {
               <th>BoliPass VIP</th>
               <th>NIT</th>
               <th>Joined</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -108,10 +109,27 @@ export default async function AdminUsersPage() {
                     </button>
                   </form>
                 </td>
-                {/* Self-attested at BoliPass checkout, format-checked only —
-                    not verified identity. View-only here for admin audit. */}
                 <td>{user.nit ?? "—"}</td>
                 <td>{user.createdAt?.slice(0, 10) ?? "—"}</td>
+                <td>
+                  {user.role !== "admin" ? (
+                    <form
+                      action={deleteUser}
+                      onSubmit={(e) => {
+                        if (!confirm(`Are you sure you want to delete user ${user.email}?`)) {
+                          e.preventDefault();
+                        }
+                      }}
+                    >
+                      <input type="hidden" name="userId" value={user.id} />
+                      <button type="submit" className="clay-btn clay-btn-sm" style={{ background: "#c83727", color: "#fff" }}>
+                        Delete
+                      </button>
+                    </form>
+                  ) : (
+                    <span className="a-muted">—</span>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>

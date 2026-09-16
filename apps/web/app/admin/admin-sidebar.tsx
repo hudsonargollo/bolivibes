@@ -163,18 +163,29 @@ export default function AdminSidebar() {
       <div>
         <div className="flex items-center justify-between p-4 border-b border-stone-800/80">
           <Link href="/admin" className="a-wordmark flex items-center gap-3 overflow-hidden" aria-label="BoliVibes admin home">
-            <img
-              src="/api/assets/brand/logo-icon.webp"
-              alt="BoliVibes"
-              width={32}
-              height={32}
-              className="flex-shrink-0 rounded-lg object-contain"
-              onError={(e) => { (e.target as HTMLImageElement).src = "/imgs/logo-icon.webp"; }}
-            />
-            {!collapsed && (
-              <div className="flex flex-col truncate">
-                <span className="font-bold text-stone-100 text-sm tracking-tight">BoliVibes</span>
-                <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">Admin Center</span>
+            {collapsed ? (
+              <div className="flex flex-col items-center gap-1 w-full">
+                <img
+                  src="/api/assets/brand/logo-icon.webp"
+                  alt="BoliVibes"
+                  width={28}
+                  height={28}
+                  className="rounded-lg object-contain"
+                  onError={(e) => { (e.target as HTMLImageElement).src = "/imgs/logo-icon.webp"; }}
+                />
+                <span className="text-[9px] text-amber-400 font-extrabold tracking-widest uppercase">ADMIN</span>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between w-full">
+                <img
+                  src="/api/assets/brand/logo-clay.webp"
+                  alt="BoliVibes"
+                  width={110}
+                  height={32}
+                  className="object-contain"
+                  onError={(e) => { (e.target as HTMLImageElement).src = "/imgs/logo-clay.webp"; }}
+                />
+                <span className="text-[10px] text-amber-400 font-extrabold uppercase tracking-widest px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/30">ADMIN</span>
               </div>
             )}
           </Link>

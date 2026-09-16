@@ -83,3 +83,19 @@ export async function setUserVip(formData: FormData) {
 
   revalidatePath("/admin/users");
 }
+
+export async function deleteUser(formData: FormData) {
+  const session = await requireAdminAction();
+  const userId = formString(formData, "userId");
+  if (!userId) throw new Error("Missing userId");
+
+  if (userId === session.userId) {
+    throw new Error("You cannot delete your own active admin account");
+  }
+
+  const { env } = cf();
+  const db = createDb(env.DB);
+  await db.delete(users).where(eq(users.id, userId));
+
+  revalidatePath("/admin/users");
+}
